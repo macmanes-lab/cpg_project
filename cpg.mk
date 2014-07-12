@@ -16,7 +16,7 @@
 
 ##### No Editing should be necessary below this line  #####
 
-all:tmp $(RUN).clust
+all:tmp $(RUN).clust format
 
 IN=input.fa
 WINDOW=500
@@ -36,6 +36,7 @@ $(RUN).clust:tmp
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
 	rm tmp tmp2 tmp4 tmp1
+format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
 	@echo '***'
