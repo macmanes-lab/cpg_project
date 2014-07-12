@@ -27,5 +27,7 @@ RUN=run
 tmp:$(IN)
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | tee $(RUN).cpg | awk '{print $$2}' > tmp
 $(RUN).clust:tmp
-	python clust.py | sort -nk4 > $(RUN).clust
-	rm tmp
+	python clust.py | sort -nk4 > tmp4 # good here
+	cat tmp4 | awk '{print $$4}' | tee tmp1 | grep -wf tmp1 $(RUN).cpg > tmp2
+	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
+	rm tmp tmp2 tmp4 tmp1
