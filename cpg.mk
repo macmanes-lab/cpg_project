@@ -21,7 +21,7 @@ all:tmp $(RUN).clust
 IN=input.fa
 WINDOW=500
 OE=0.65
-AUGMENT=10
+AUGMENT=15
 RUN=run
 
 tmp:$(IN)
