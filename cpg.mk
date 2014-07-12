@@ -28,6 +28,7 @@ tmp:$(IN)
 	@echo '\n\n'BEGIN: `date +'%a %d%b%Y  %H:%M:%S'`
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
+	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | tee $(RUN).cpg | awk '{print $$2}' > tmp
 $(RUN).clust:tmp
 	python clust.py | sort -nk4 > tmp4 # good here
@@ -35,4 +36,7 @@ $(RUN).clust:tmp
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
 	rm tmp tmp2 tmp4 tmp1
+	@echo '***'
+	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
+	@echo '***'
 	@echo END: `date +'%a %d%b%Y  %H:%M:%S'`'\n\n'
