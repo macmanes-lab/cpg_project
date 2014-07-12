@@ -1,11 +1,8 @@
 chr22	StartPos=500	Length=750	62.0	0.88
-chr22	StartPos=32606	Length=3383	51.8	0.84
-chr22	StartPos=70248	Length=1008	51.8	2.08
-chr22	StartPos=80364	Length=569	58.8	0.65
+chr22	StartPos=33371	Length=2766	56.8	1.28
+chr22	StartPos=70414	Length=800	56.8	1.10
+chr22	StartPos=80364	Length=559	58.8	0.65
 chr22	StartPos=95132	Length=567	68.2	0.65
-chr22	StartPos=105198	Length=1285	54.2	0.65
-chr22	StartPos=165871	Length=1278	57.4	0.65
-chr22	StartPos=214101	Length=589	51.8	2.08
-chr22	StartPos=240635	Length=526	53.4	0.65
-chr22	StartPos=249517	Length=1318	51.8	1.20
-chr22	StartPos=272595	Length=531	51.8	3.98
+chr22	StartPos=105998	Length=619	56.8	0.82
+chr22	StartPos=165871	Length=1144	57.4	0.65
+chr22	StartPos=252204	Length=944	56.8	1.59
