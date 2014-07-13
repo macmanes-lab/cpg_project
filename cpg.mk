@@ -37,11 +37,7 @@ $(RUN).clust:$(RUN).cpg
 	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
 	for e in `cat list`; do grep -w $$e $(RUN).cpg > $$e.lists; done
 	for i in `ls *lists`; do awk '{print $$2}' $$i > $$i.input; done
-	for g in `ls *input`; do python clust.py $$g | sort -nk4 >> tmp4; done
-	##END TEST
-	#sh clust.sh -t $THREADS -i $(RUN).cpg
-	cat tmp4 | awk '{print $$4}' > tmp1
-	grep -wf tmp1 $(RUN).cpg > tmp2
+	for g in `ls *input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a tmp4 | awk '{print $$4}' | grep -w - $$F.lists >> tmp2; done
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
 	rm tmp tmp2 tmp4 tmp1 $(RUN).lists.input $(RUN).lists list
 format:$(RUN).clust
