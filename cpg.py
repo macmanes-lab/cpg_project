@@ -41,7 +41,7 @@ for rec in SeqIO.parse(options.inputfile, "fasta"):
     for i in range(0,numOfChunks,1):
         sequence = rec.seq[i:i+options.winSize]
         pos = int(i+options.winSize)
-        gc_seq = float (sequence.count("G") + sequence.count("C")) * 100 / winSize
+        gc_seq = (float (sequence.count("G") + sequence.count("C")) * 100 / winSize)
         try:              
             if gc_seq > gc + options.aug :
                 results.append(pos)
