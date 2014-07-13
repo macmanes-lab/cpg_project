@@ -34,6 +34,7 @@ while [ $n -lt $total ]; do
 		for i in `cat list`; do python clust.py $i | sort -nk4 >> tmp4 &
 		let n=n+1
 	else
-		let n=n+1
+		echo "No core"
+		sleep 15s
 	fi
 done
