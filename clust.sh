@@ -27,8 +27,7 @@ cat $INP | awk '{print $1}' | uniq > list
 for e in `cat list`; do grep -w $e $INP > $e.lists; done
 total=$(wc -l list | awk '{print $1}')
 n=1
-while [ $n -lt $total ]; 
-	do r=`ps -all | grep 'python' | wc -l`
+while [ $n -lt $total ]; do r=`ps -all | grep 'python' | wc -l`
 		if [ $r -lt $TC ]
 		then
 			for g in `cat list`; do python clust.py $g | sort -nk4 >> tmp4 &
