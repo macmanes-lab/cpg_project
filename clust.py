@@ -25,10 +25,8 @@ try:
 	cluster_centers = ms.cluster_centers_
 	labels_unique = np.unique(labels)
 	n_clusters_ = len(labels_unique)
+	for k in range(n_clusters_):
+	    my_members = labels == k
+	    print "ClusterID={0} Length={2} StartPos= {1}".format(k, X[my_members, 0][0], len(X[my_members, 0])+500)
 except:
 	e = sys.exc_info()[0]
-
-for k in range(n_clusters_):
-    my_members = labels == k
-    print "ClusterID={0} Length={2} StartPos= {1}".format(k, X[my_members, 0][0], len(X[my_members, 0])+500)
-    #print X[my_members, 0][0]
