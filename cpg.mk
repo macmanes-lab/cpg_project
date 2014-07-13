@@ -31,21 +31,8 @@ $(RUN).cpg:$(IN)
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
-	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
-	for i in `cat list`; do grep -w $$i $(RUN).cpg > $$i.lists; done
 $(RUN).clust:$(RUN).cpg
-	total = $(shell wc -l list | awk '{print $$1}')
-	n=1
-	while [ $$n -lt $$total ]; do
-		i = $(shell `ps -all | grep 'python' | wc -l`)
-		if [ $$i -lt $THREADS ] ; #are there less than $TC jobs currently running?
-		then
-			for i in `cat list`; do python clust.py $$i | sort -nk4 >> tmp4 &
-			let n=n+1
-		else
-			let n=n+1
-		fi
-	done # good here
+	sh clust.sh -t $THREADS
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
