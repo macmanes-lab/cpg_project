@@ -13,7 +13,7 @@ EOF
 );
 
 
-while getopts f:b:o:t: option
+while getopts i:t: option
 do
     case "${option}"
     in
