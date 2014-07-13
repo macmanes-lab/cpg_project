@@ -26,12 +26,13 @@ RUN=run
 THREADS=24
 
 $(RUN).cpg:$(IN)
-	@echo '\n\n'BEGIN: `date +'%a %d%b%Y  %H:%M:%S'`
+	@echo '\n\n'BEGIN CpG DETECTION: `date +'%a %d%b%Y  %H:%M:%S'`
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
 $(RUN).clust:$(RUN).cpg
+	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
 	sh clust.sh -t $THREADS -i $(RUN).cpg
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
