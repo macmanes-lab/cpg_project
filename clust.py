@@ -19,15 +19,14 @@ with open(sys.argv[1]) as my_file:
 X = np.array(zip(X,np.zeros(len(X))), dtype=np.int)
 try:
 	bandwidth = estimate_bandwidth(X, quantile=0.1)
+	ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+	ms.fit(X)
+	labels = ms.labels_
+	cluster_centers = ms.cluster_centers_
+	labels_unique = np.unique(labels)
+	n_clusters_ = len(labels_unique)
 except:
 	e = sys.exc_info()[0]
-ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
-ms.fit(X)
-labels = ms.labels_
-cluster_centers = ms.cluster_centers_
-
-labels_unique = np.unique(labels)
-n_clusters_ = len(labels_unique)
 
 for k in range(n_clusters_):
     my_members = labels == k
