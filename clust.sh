@@ -8,6 +8,7 @@ usage=$(cat << EOF
 
    Options:
       -t <v> : *required* Numberof threads to use.
+      -i <v> : *required* Input file.
 EOF
 );
 
