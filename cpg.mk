@@ -30,10 +30,10 @@ $(RUN).cpg:$(IN)
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
-	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | tee $(RUN).cpg
+	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
 	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
 	for i in `cat list`; do grep -w $$i $(RUN).cpg > $$i.lists; done
-$(RUN).clust:tmp
+$(RUN).clust:$(RUN).cpg
 	total = $(shell wc -l list | awk '{print $$1}')
 	n=1
 	while [ $$n -lt $$total ]; do
