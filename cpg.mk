@@ -16,7 +16,7 @@
 
 ##### No Editing should be necessary below this line  #####
 
-all:tmp $(RUN).clust format
+all:$(RUN).cpg $(RUN).clust format
 
 IN=input.fa
 WINDOW=500
@@ -24,15 +24,15 @@ OE=0.65
 AUGMENT=15
 RUN=run
 
-tmp:$(IN)
+$(RUN).cpg:$(IN)
 	@echo '\n\n'BEGIN: `date +'%a %d%b%Y  %H:%M:%S'`
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
-	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | tee $(RUN).cpg | awk '{print $$2}' > tmp
+	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | tee $(RUN).cpg
+	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
+	for i in `cat list`; do grep -w $$i $(RUN).cpg > $$i.lists; done
 $(RUN).clust:tmp
-	awk 'NR%10==0' tmp  > temp
-	mv temp tmp
 	python clust.py | sort -nk4 > tmp4 # good here
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
