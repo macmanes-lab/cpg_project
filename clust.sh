@@ -24,14 +24,14 @@ done
 
 
 cat $INP | awk '{print $1}' | uniq > list
-for i in `cat list`; do grep -w $i $INP > $i.lists; done
+for e in `cat list`; do grep -w $e $INP > $e.lists; done
 total=$(wc -l list | awk '{print $1}')
 n=1
 while [ $n -lt $total ]; do
-	i=`ps -all | grep 'python' | wc -l`
-	if [ $i -lt $TC ] ;
+	r=`ps -all | grep 'python' | wc -l`
+	if [ $r -lt $TC ] ;
 	then
-		for i in `cat list`; do python clust.py $i | sort -nk4 >> tmp4 &
+		for g in `cat list`; do python clust.py $g | sort -nk4 >> tmp4 &
 		let n=n+1
 	else
 		echo "No core"
