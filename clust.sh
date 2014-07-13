@@ -17,12 +17,13 @@ do
     case "${option}"
     in
 	t) TC=${OPTARG};;
+	i) IN=${OPTARG};;
     esac
 done
 
 
-cat Trichoplax.cpg | awk '{print $1}' | uniq > list
-for i in `cat list`; do grep -w $i Trichoplax.cpg > $i.lists; done
+cat $IN | awk '{print $1}' | uniq > list
+for i in `cat list`; do grep -w $i $IN > $i.lists; done
 total=$(wc -l list | awk '{print $1}')
 n=1
 while [ $n -lt $total ]; do
