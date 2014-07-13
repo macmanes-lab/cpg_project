@@ -32,7 +32,7 @@ $(RUN).cpg:$(IN)
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
 $(RUN).clust:$(RUN).cpg
-	sh clust.sh -t $THREADS
+	sh clust.sh -t $THREADS -i $(RUN).cpg
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
