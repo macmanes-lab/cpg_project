@@ -23,6 +23,7 @@ WINDOW=500
 OE=0.65
 AUGMENT=15
 RUN=run
+THREADS=24
 
 $(RUN).cpg:$(IN)
 	@echo '\n\n'BEGIN: `date +'%a %d%b%Y  %H:%M:%S'`
@@ -33,7 +34,18 @@ $(RUN).cpg:$(IN)
 	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
 	for i in `cat list`; do grep -w $$i $(RUN).cpg > $$i.lists; done
 $(RUN).clust:tmp
-	python clust.py | sort -nk4 > tmp4 # good here
+	total = $(shell wc -l list | awk '{print $$1}')
+	n=1
+	while [ $$n -lt $$total ]; do
+		i=`ps -all | grep 'python' | wc -l`
+		if [ $$i -lt $THREADS ] ; #are there less than $TC jobs currently running?
+		then
+			for i in `cat list`; do python clust.py $$i | sort -nk4 >> tmp4 &
+			let n=n+1
+		else
+			let n=n+1
+		fi
+	done # good here
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
