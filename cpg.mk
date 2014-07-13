@@ -36,7 +36,7 @@ $(RUN).clust:$(RUN).cpg
 	##TEST
 	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
 	for e in `cat list`; do grep -w $$e $(RUN).cpg > $$e.lists; done
-	for i in `ls *lists`; do awk '{print $$2}' > $$i.input
+	for i in `ls *lists`; do awk '{print $$2}' > $$i.input; done
 	for g in `ls *input`; do python clust.py $$g | sort -nk4 >> tmp4; done
 	##END TEST
 	#sh clust.sh -t $THREADS -i $(RUN).cpg
