@@ -33,7 +33,12 @@ $(RUN).cpg:$(IN)
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
 $(RUN).clust:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
-	sh clust.sh -t $THREADS -i $(RUN).cpg
+	##TEST
+	cat $(RUN).cpg | awk '{print $$1}' | uniq > list
+	for e in `cat list`; do grep -w $$e $(RUN).cpg > $$e.lists; done
+	for g in `cat list`; do python clust.py $$g | sort -nk4 >> tmp4; done
+	##END TEST
+	#sh clust.sh -t $THREADS -i $(RUN).cpg
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
