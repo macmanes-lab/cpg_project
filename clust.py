@@ -17,7 +17,10 @@ parser.add_option("-o", "--output", dest="output",
 with open(sys.argv[1]) as my_file:
     X = my_file.readlines()
 X = np.array(zip(X,np.zeros(len(X))), dtype=np.int)
-bandwidth = estimate_bandwidth(X, quantile=0.1)
+try:
+	bandwidth = estimate_bandwidth(X, quantile=0.1)
+except:
+	e = sys.exc_info()[0]
 ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
 ms.fit(X)
 labels = ms.labels_
