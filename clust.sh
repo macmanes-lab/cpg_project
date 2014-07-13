@@ -16,8 +16,6 @@ while getopts f:b:o:t: option
 do
     case "${option}"
     in
-    f) FA=${OPTARG};;
-	o) CF=${OPTARG};;
 	t) TC=${OPTARG};;
     esac
 done
@@ -29,7 +27,7 @@ total=$(wc -l list | awk '{print $1}')
 n=1
 while [ $n -lt $total ]; do
 	i=`ps -all | grep 'python' | wc -l`
-	if [ $i -lt $THREADS ] ; #are there less than $TC jobs currently running?
+	if [ $i -lt $TC ] ;
 	then
 		for i in `cat list`; do python clust.py $i | sort -nk4 >> tmp4 &
 		let n=n+1
