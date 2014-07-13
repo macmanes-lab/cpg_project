@@ -18,13 +18,13 @@ do
     case "${option}"
     in
 	t) TC=${OPTARG};;
-	i) IN=${OPTARG};;
+	i) INP=${OPTARG};;
     esac
 done
 
 
-cat $IN | awk '{print $1}' | uniq > list
-for i in `cat list`; do grep -w $i $IN > $i.lists; done
+cat $INP | awk '{print $1}' | uniq > list
+for i in `cat list`; do grep -w $i $INP > $i.lists; done
 total=$(wc -l list | awk '{print $1}')
 n=1
 while [ $n -lt $total ]; do
