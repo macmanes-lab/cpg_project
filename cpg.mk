@@ -37,7 +37,7 @@ $(RUN).clust:tmp
 	total = $(shell wc -l list | awk '{print $$1}')
 	n=1
 	while [ $$n -lt $$total ]; do
-		i=`ps -all | grep 'python' | wc -l`
+		i = $(shell `ps -all | grep 'python' | wc -l`)
 		if [ $$i -lt $THREADS ] ; #are there less than $TC jobs currently running?
 		then
 			for i in `cat list`; do python clust.py $$i | sort -nk4 >> tmp4 &
