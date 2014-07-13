@@ -34,14 +34,13 @@ parser.add_option("-a", "--augment", dest="aug", type="int",
 
 for rec in SeqIO.parse(options.inputfile, "fasta"):
     gc = GC(rec.seq)
-    print "Genomic GC Content= %s" % (gc)
     results = []
     numOfChunks = ((len(rec.seq) - options.winSize))+1
     for i in range(0,numOfChunks,1):
         sequence = rec.seq[i:i+options.winSize]
         pos = int(i+options.winSize)
         try:              
-            if float (sequence.count("G")+sequence.count("C"))/winSize > gc + options.aug :
+            if float (sequence.count("G") + sequence.count("C")) * 100 / winSize > gc + options.aug :
                 results.append(pos)
                 print "%s\t %s\t %s\t %s" % (rec.id, pos, GC(sequence), "{0:.2f}".format((sequence.count("CG") / float (sequence.count("G")*sequence.count("C")))*len(sequence)))
         except:
