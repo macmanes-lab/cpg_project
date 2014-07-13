@@ -39,7 +39,7 @@ $(RUN).clust:$(RUN).cpg
 	for i in `ls *lists`; do awk '{print $$2}' $$i > $$i.input; done
 	for g in `ls *input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a tmp4 | awk '{print $$4}' | grep -wf - $$F >> tmp2; done
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
-	rm tmp tmp2 tmp4 tmp1 $(RUN).lists.input $(RUN).lists list
+	rm tmp2 tmp4 *.input *.lists list
 format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
