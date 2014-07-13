@@ -43,7 +43,7 @@ $(RUN).clust:$(RUN).cpg
 	cat tmp4 | awk '{print $$4}' > tmp1
 	grep -wf tmp1 $(RUN).cpg > tmp2
 	paste tmp4 tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
-	rm tmp tmp2 tmp4 tmp1 $(RUN).lists.input $(RUN).lists
+	rm tmp tmp2 tmp4 tmp1 $(RUN).lists.input $(RUN).lists list
 format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
