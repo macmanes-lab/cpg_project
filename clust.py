@@ -14,7 +14,7 @@ parser.add_option("-o", "--output", dest="output",
 
 (options, args) = parser.parse_args()
 
-with open(sys.argv[0]) as my_file:
+with open(sys.argv[1]) as my_file:
     X = my_file.readlines()
 X = np.array(zip(X,np.zeros(len(X))), dtype=np.int)
 bandwidth = estimate_bandwidth(X, quantile=0.1)
