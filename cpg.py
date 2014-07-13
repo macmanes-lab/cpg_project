@@ -6,6 +6,8 @@ import os
 from optparse import OptionParser
 import numpy
 
+#usage python cpg.py -i test.fa -a 15 -w 500
+
 parser = OptionParser()
 
 parser.add_option("-w", "--window", dest="winSize", type="int",
@@ -39,8 +41,9 @@ for rec in SeqIO.parse(options.inputfile, "fasta"):
     for i in range(0,numOfChunks,1):
         sequence = rec.seq[i:i+options.winSize]
         pos = int(i+options.winSize)
+        gc_seq = float (sequence.count("G") + sequence.count("C")) * 100 / winSize
         try:              
-            if float (sequence.count("G") + sequence.count("C")) * 100 / winSize > gc + options.aug :
+            if gc_seq > gc + options.aug :
                 results.append(pos)
                 print "%s\t %s\t %s\t %s" % (rec.id, pos, GC(sequence), "{0:.2f}".format((sequence.count("CG") / float (sequence.count("G")*sequence.count("C")))*len(sequence)))
         except:
