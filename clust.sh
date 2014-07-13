@@ -31,7 +31,7 @@ while [ $n -lt $total ]; do
 	r=`ps -all | grep 'python' | wc -l`
 	if [ $r -lt $TC ]
 	then
-		for g in `cat list`; do python clust.py $g | sort -nk4 >> tmp4 &
+		for g in `cat list`; do python clust.py $g | sort -nk4 >> tmp4; done &
 		let n=n+1
 	else
 		echo "No core"
