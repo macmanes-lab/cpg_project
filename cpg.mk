@@ -13,6 +13,7 @@
 ###          -Make sure you pull the config.analy file from GIT, or make you own.
 ############################################
 
+#cpg ?= $(shell which 'cpg.py')
 
 ##### No Editing should be necessary below this line  #####
 
