@@ -31,16 +31,16 @@ $(RUN).cpg:$(IN)
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
-	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' > $(RUN).cpg
+	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | awk 'NR%10==0' > $(RUN).cpg
 $(RUN).clust:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
 	##TEST
 	cat $(RUN).cpg | awk '{print $$1}' | uniq > $(RUN).list
-	for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $$e.lists; done
-	for i in `ls *lists`; do awk '{print $$2}' $$i > $$i.input; done
-	for g in `ls *input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a $(RUN).tmp4 | awk '{print $$4}' | grep -wf - $$F >> $(RUN).tmp2; done
+	for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $(RUN).$$e.lists; done
+	for i in `ls $(RUN).*lists`; do awk '{print $$2}' $$i > $$i.input; done
+	for g in `ls $(RUN).*input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a $(RUN).tmp4 | awk '{print $$4}' | grep -wf - $$F >> $(RUN).tmp2; done
 	paste $(RUN).tmp4 $(RUN).tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
-	rm $(RUN).tmp2 $(RUN).tmp4 *.input *.lists $(RUN).list
+	#rm $(RUN).tmp2 $(RUN).tmp4 $(RUN)*.input $(RUN).*.lists $(RUN).list
 format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')

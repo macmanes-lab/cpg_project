@@ -18,7 +18,7 @@ with open(sys.argv[1]) as my_file:
     X = my_file.readlines()
 try:	
 	X = np.array(zip(X,np.zeros(len(X))), dtype=np.int)
-	bandwidth = estimate_bandwidth(X, quantile=0.1)
+	bandwidth = estimate_bandwidth(X, quantile=0.0015)
 	ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
 	ms.fit(X)
 	labels = ms.labels_
@@ -30,3 +30,4 @@ try:
 	    print "ClusterID={0} Length={2} StartPos= {1}".format(k, X[my_members, 0][0], len(X[my_members, 0])+500)
 except:
 	e = sys.exc_info()[0]
+	print e

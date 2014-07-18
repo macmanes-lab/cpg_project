@@ -15,6 +15,11 @@ parser.add_option("-i", "--input", dest="inputfile",
 (options, args) = parser.parse_args()
 
 
-for rec in SeqIO.parse(options.inputfile, "fasta"):
-	gc = GC(rec.seq)
-	print gc
+rec = open(options.inputfile, 'r')
+results = []
+for i, line in enumerate(rec):
+    if i > 1:
+        if not line.lstrip().startswith('>'):
+           results.append(line)
+A_count = results('A') 
+print A_count
