@@ -25,6 +25,7 @@ OE=0.65
 AUGMENT=15
 RUN=run
 THREADS=24
+nline=$(shell wc -l $(RUN).cpg | awk '{print $$1}')
 
 $(RUN).cpg:$(IN)
 	@echo '\n\n'BEGIN CpG DETECTION: `date +'%a %d%b%Y  %H:%M:%S'`
@@ -35,18 +36,14 @@ $(RUN).cpg:$(IN)
 $(RUN).clust:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
 	##TEST
-	nline=$$(wc -l $(RUN).cpg | awk '{print $$1}')
-	time for i in `seq 1 $$nline`;
-	do
-		echo `expr $(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$i' {print $$2}' $(RUN).cpg)` >> $(RUN).cpg.clusters;
-	done
-	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg.clusters - | awk '200>$$5{next}1' > $(RUN).clust
-	#cat $(RUN).cpg | awk '{print $$1}' | uniq > $(RUN).list
-	#for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $(RUN).$$e.lists; done
-	#for i in `ls $(RUN).*lists`; do awk '{print $$2}' $$i > $$i.input; done
-	#for g in `ls $(RUN).*input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a $(RUN).tmp4 | awk '{print $$4}' | grep -wf - $$F >> $(RUN).tmp2; done
-	#paste $(RUN).tmp4 $(RUN).tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
-	rm $(RUN).cpg.clusters
+	for i in `seq 1 $$nline`; do echo `expr $$(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$$i' {print $$2}' $(RUN).cpg)` | tee -a $(RUN).cpg.clusters; done
+	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg - | awk '200>$$5{next}1' > $(RUN).clust
+		#cat $(RUN).cpg | awk '{print $$1}' | uniq > $(RUN).list
+		#for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $(RUN).$$e.lists; done
+		#for i in `ls $(RUN).*lists`; do awk '{print $$2}' $$i > $$i.input; done
+		#for g in `ls $(RUN).*input`; do F=`basename $$g .input`; python clust.py $$g | sort -nk4 | tee -a $(RUN).tmp4 | awk '{print $$4}' | grep -wf - $$F >> $(RUN).tmp2; done
+		#paste $(RUN).tmp4 $(RUN).tmp2 | awk '{print $$5 "\t" $$3 $$4 "\t" $$2 "\t" $$7 "\t" $$8}' > $(RUN).clust
+	#rm $(RUN).cpg.clusters
 format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
