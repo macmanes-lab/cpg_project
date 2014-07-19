@@ -20,11 +20,11 @@ $(RUN).cpg:$(IN)
 	@echo Results will be in a file named $(RUN).clust
 	@echo The format of this file is 'Contig name   CpG Start Position   CpG Length   %GC   Obs/Exp'
 	@echo Settings used: Window size:$(WINDOW) Obs/Exp=$(OE) %GC=Background + $(AUGMENT)%
-	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | awk 'NR%10==0' > $(RUN).cpg
+	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | awk 'NR%20==0' > $(RUN).cpg
 $(RUN).clust $(RUN).cpg.clusters:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
 	./for.sh -i $(RUN).cpg -o $(RUN).cpg.clusters
-	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg - | awk '50>$$5{next}1' > $(RUN).clust
+	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg - | awk '500>$$5{next}1' > $(RUN).clust
 format:$(RUN).clust
 	@echo '***'
 	@echo Number of CpG Islands = $(shell wc -l $(RUN).clust | awk '{print $$1}')
