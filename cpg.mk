@@ -36,7 +36,9 @@ $(RUN).cpg:$(IN)
 $(RUN).clust:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
 	##TEST
-	for i in `seq 1 $$nline`; do echo `expr $$(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$$i' {print $$2}' $(RUN).cpg)` | tee -a $(RUN).cpg.clusters; done
+	for i in `seq 1 $$nline`; do \
+		echo `expr $$(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$$i' {print $$2}' $(RUN).cpg)` | tee -a $(RUN).cpg.clusters; \
+	done
 	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg - | awk '200>$$5{next}1' > $(RUN).clust
 		#cat $(RUN).cpg | awk '{print $$1}' | uniq > $(RUN).list
 		#for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $(RUN).$$e.lists; done
