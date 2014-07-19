@@ -9,7 +9,6 @@ usage=$(cat << EOF
    Options:
       -o <v> : *required* output file.
       -i <v> : *required* Input file.
-      -n <v> : *required* nline.
 EOF
 );
 
@@ -20,9 +19,10 @@ do
     in
 	o) OUT=${OPTARG};;
 	i) IN=${OPTARG};;
-	n) NLINE=${OPTARG};;
     esac
 done
 
-for i in `seq 1 $NLINE`; do \
-	echo `expr $(awk 'NR == '$i'+1 {print $2}' $IN) - $(awk 'NR == '$i' {print $2}' $IN)` | tee -a $OUT; done
+
+nline=`expr $(wc -l $IN | awk '{print $1}') - 1`
+for i in `seq 1 $nline`; do \
+	echo `expr $(awk 'NR == '$i'+1 {print $2}' $IN) - $(awk 'NR == '$i' {print $2}' $IN)` >> $OUT; done

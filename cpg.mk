@@ -4,18 +4,8 @@
 ###        -usage 'assembly.mk RUN=run CPU=8 MEM=15 READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
 ###         -RUN= name of run
 ###
-###        -limitations=  must use PE files.. no support for SE...
-###
-###         -Make sure your Trinity base directory 
-###         	is set properly
-###         -Make sure barcode file is located with
-###           BCODES= tag
-###          -Make sure you pull the config.analy file from GIT, or make you own.
 ############################################
 
-#cpg ?= $(shell which 'cpg.py')
-
-##### No Editing should be necessary below this line  #####
 
 all:$(RUN).cpg $(RUN).clust format
 
@@ -25,7 +15,6 @@ OE=0.65
 AUGMENT=15
 RUN=run
 THREADS=24
-nline=$(shell wc -l $(RUN).cpg | awk '{print $$1}')
 
 $(RUN).cpg:$(IN)
 	@echo '\n\n'BEGIN CpG DETECTION: `date +'%a %d%b%Y  %H:%M:%S'`
@@ -35,10 +24,10 @@ $(RUN).cpg:$(IN)
 	python cpg.py -i $(IN) -a $(AUGMENT) -w $(WINDOW)| awk '$(OE)>$$4{next}1' | awk 'NR%10==0' > $(RUN).cpg
 $(RUN).clust:$(RUN).cpg
 	@echo '\n\n'BEGIN CLUSTERING: `date +'%a %d%b%Y  %H:%M:%S'`
+	./for.sh -i $(RUN).cpg -o $(RUN).cpg.clusters
 	##TEST
-	for i in `seq 1 $$nline`; do \
-		echo `expr $$(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$$i' {print $$2}' $(RUN).cpg)` | tee -a $(RUN).cpg.clusters; \
-	done
+	#for i in `seq 1 $$nline`; do \
+	#echo `expr $$(awk 'NR == '$$i'+1 {print $$2}' $(RUN).cpg) - $$(awk 'NR == '$$i' {print $$2}' $(RUN).cpg)` | tee -a $(RUN).cpg.clusters; done
 	cat $(RUN).cpg.clusters | sed '1 i\1223' | paste $(RUN).cpg - | awk '200>$$5{next}1' > $(RUN).clust
 		#cat $(RUN).cpg | awk '{print $$1}' | uniq > $(RUN).list
 		#for e in `cat $(RUN).list`; do grep -w $$e $(RUN).cpg > $(RUN).$$e.lists; done
